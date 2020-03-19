@@ -5,13 +5,16 @@
             <textarea @keydown="handleMessageInput" v-model="body" id="body" cols="30" rows="4" class="chat__form-input"></textarea>
 
             <span class="chat__form-helptext">
-                Hit <b>Return</b> to send or <b>Ctrl + Return</b> for a new line
+                Hit <b>Return</b> to send or <b>Shift + Return</b> for a new line
             </span>
         </form>
     </div>
 </template>
 
 <script>
+    import Bus from '../../bus'
+    import moment from 'moment'
+
     export default {
         data() {
             return {
@@ -20,13 +23,34 @@
         },
         methods: {
             handleMessageInput(e) {
-                if (e.keyCode === 13 && !e.ctrlKey) {
+                if (e.keyCode === 13 && !e.shiftKey) {
                     e.preventDefault()
                     this.send()
                 }
             },
-            send() {
+            buildTempMessage() {
+                let tempId = Date.now();
 
+                return {
+                    id: tempId,
+                    body: this.body,
+                    created_at: moment().utc(3).format('YYYY-MM-DD HH:mm:ss'),
+                    selfOwned: true,
+                    user: {
+                        name: window.Laravel.user.name
+                    }
+                }
+            },
+            send() {
+                if (!this.body || this.body.trim() === '') {
+                    return
+                }
+
+                let tempMessage = this.buildTempMessage()
+
+                Bus.$emit('message.added', tempMessage)
+
+                this.body = null
             }
         }
     }

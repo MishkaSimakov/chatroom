@@ -1,5 +1,5 @@
 <template>
-    <div class="chat__message" :class="{ 'chat__message-own' : message.selfOwned }">
+    <div class="chat__message" :class="{ 'chat__message--own' : message.selfOwned }">
         <strong class="chat__message-user">{{ message.user.name }}</strong>
         <span class="chat__message-timestamp">{{ message.created_at }}</span>
 
