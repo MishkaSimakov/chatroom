@@ -2,10 +2,10 @@
     <div class="chat">
         <chat-messages></chat-messages>
         <form action="#" class="chat__form">
-            <textarea id="body" cols="30" rows="4" class="chat__form-input"></textarea>
+            <textarea @keydown="handleMessageInput" v-model="body" id="body" cols="30" rows="4" class="chat__form-input"></textarea>
 
             <span class="chat__form-helptext">
-                Hit <b>return</b> to send or <b>Ctrl + Return</b> for a new line
+                Hit <b>Return</b> to send or <b>Ctrl + Return</b> for a new line
             </span>
         </form>
     </div>
@@ -13,7 +13,22 @@
 
 <script>
     export default {
-        name: "Chat"
+        data() {
+            return {
+                body: null
+            }
+        },
+        methods: {
+            handleMessageInput(e) {
+                if (e.keyCode === 13 && !e.ctrlKey) {
+                    e.preventDefault()
+                    this.send()
+                }
+            },
+            send() {
+
+            }
+        }
     }
 </script>
 
